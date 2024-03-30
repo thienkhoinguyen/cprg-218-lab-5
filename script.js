@@ -54,6 +54,22 @@ async function renderOption1Dropdown() {
     }
 }
 
+let nextPageUrl;
+
+async function fetchMoreDigimon() {
+    try {
+        if (nextPageUrl) {
+            const response = await fetch(nextPageUrl);
+            const data = await response.json();
+            nextPageUrl = data.pageable.nextPage;
+            return data.content;
+        }
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
 renderOption1Dropdown();
 
 const option1SubmitButton = document.getElementById("submit-button");
