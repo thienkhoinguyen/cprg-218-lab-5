@@ -26,7 +26,6 @@ async function fetchDigimonDetails(url) {
     }
 }
 
-
 async function fetchDigimonList() {
     try {
         const response = await fetch("https://digi-api.com/api/v1/digimon");
@@ -36,6 +35,48 @@ async function fetchDigimonList() {
     } catch (error) {
         console.error(error);
         return [];
+    }
+}
+
+async function renderOption1Results(data) {
+    console.log("Digimon Data:", data);
+
+    const imageUrl = data.images[0]?.href || "";
+    console.log("Image URL:", imageUrl);
+
+    const attributeId = data.attributes[0]?.id || ""; 
+    const attributeData = await fetchAttributeDetailsById(attributeId);
+    const attribute = attributeData.name || "Unknown Attribute";
+
+
+    const card = await createCardElement({
+        id: data.id,
+        title: data.name,
+        subtitle: `${data.types.map((type) => type.type).join(", ")}`,
+        image: imageUrl,
+        attribute: attribute,
+    });
+    document.getElementById("option-1-results").innerHTML = card;
+}
+
+async function fetchAttributeDetailsById(id) {
+    try {
+        const response = await fetch(`https://digi-api.com/api/v1/attribute/${id}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        return {};
+    }
+}
+
+async function option1DropdownClickHandler(event) {
+    const select = document.getElementById("dropdown");
+    const url = select.options[select.selectedIndex].value;
+    const data = await fetchDigimonDetails(url);
+    console.log(data);
+    if (data) {
+        renderOption1Results(data);
     }
 }
 
