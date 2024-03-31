@@ -12,6 +12,8 @@ async function createCardElement(item) {
             <p class="subheader">${item.subtitle}</p>
             <h3 class="header">${item.title}</h3>
             <p class="attribute">Attribute: ${item.attribute}</p>
+            <p class="field">Field: ${item.field}</p>
+            <p class="digimon-id">Digimon ID: ${item.id}</p>
          </div>
     </li>`;
 }
@@ -48,6 +50,9 @@ async function renderOption1Results(data) {
     const attributeData = await fetchAttributeDetailsById(attributeId);
     const attribute = attributeData.name || "Unknown Attribute";
 
+    const fieldId = data.fields[0]?.id || ""; 
+    const fieldData = await fetchFieldDetailsById(fieldId);
+    const field = fieldData.name || "Unknown Field";
 
     const card = await createCardElement({
         id: data.id,
@@ -55,6 +60,7 @@ async function renderOption1Results(data) {
         subtitle: `${data.types.map((type) => type.type).join(", ")}`,
         image: imageUrl,
         attribute: attribute,
+        field: field 
     });
     document.getElementById("option-1-results").innerHTML = card;
 }
@@ -70,6 +76,17 @@ async function fetchAttributeDetailsById(id) {
     }
 }
 
+async function fetchFieldDetailsById(id) {
+    try {
+        const response = await fetch(`https://digi-api.com/api/v1/field/${id}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        return {};
+    }
+}
+
 async function option1DropdownClickHandler(event) {
     const select = document.getElementById("dropdown");
     const url = select.options[select.selectedIndex].value;
@@ -77,6 +94,19 @@ async function option1DropdownClickHandler(event) {
     console.log(data);
     if (data) {
         renderOption1Results(data);
+    }
+}
+
+
+async function fetchDigimonList() {
+    try {
+        const response = await fetch("https://digi-api.com/api/v1/digimon");
+        const data = await response.json();
+        nextPageUrl = data.pageable.nextPage;
+        return data.content;
+    } catch (error) {
+        console.error(error);
+        return [];
     }
 }
 
