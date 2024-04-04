@@ -134,6 +134,7 @@ renderOption1Dropdown();
 const option1SubmitButton = document.getElementById("submit-button");
 option1SubmitButton.addEventListener("click", option1DropdownClickHandler);
 
+
 /**digimon list Option 2 */
 
 async function renderOption2() {
@@ -158,21 +159,26 @@ async function renderOption2() {
             myFavouriteDigimon.map(fetchDigimonData)
         );
 
-        const cardData = digimonData.map((data) => {
+        const cardData = digimonData.map(async (data) => {
             if (!data) return null;
             const imageUrl = data.images[0]?.href || "";
+            // Fetch attribute and field details
+            const attributeData = await fetchAttributeDetailsById(data.attributes[0]?.id);
+            const attribute = attributeData.name || "Unknown Attribute";
+            const fieldData = await fetchFieldDetailsById(data.fields[0]?.id);
+            const field = fieldData.name || "Unknown Field";
             return {
                 id: data.id,
                 title: data.name,
                 subtitle: `${data.types.map((type) => type.type).join(", ")}`,
                 image: imageUrl,
-                attribute: data.attributes[0]?.name || "Unknown Attribute",
-                field: data.fields[0]?.name || "Unknown Field"
+                attribute: attribute,
+                field: field
             };
         });
 
         let cardsHtml = '';
-        for (const digimon of cardData) {
+        for await (const digimon of cardData) {
             if (digimon) {
                 const card = await createCardElement(digimon);
                 cardsHtml += card;
@@ -186,4 +192,3 @@ async function renderOption2() {
 }
 
 renderOption2(); 
-
