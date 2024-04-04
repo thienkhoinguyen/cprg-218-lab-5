@@ -28,18 +28,6 @@ async function fetchDigimonDetails(url) {
     }
 }
 
-async function fetchDigimonList() {
-    try {
-        const response = await fetch("https://digi-api.com/api/v1/digimon");
-        const data = await response.json();
-        nextPageUrl = data.pageable.nextPage;
-        return data.content;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-}
-
 async function renderOption1Results(data) {
     console.log("Digimon Data:", data);
 
