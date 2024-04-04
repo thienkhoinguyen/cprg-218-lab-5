@@ -133,3 +133,60 @@ renderOption1Dropdown();
 
 const option1SubmitButton = document.getElementById("submit-button");
 option1SubmitButton.addEventListener("click", option1DropdownClickHandler);
+
+/**digimon list Option 2 */
+
+/**digimon list Option 2 */
+
+
+async function renderOption2() {
+    const myFavouriteDigimon = ["Garummon", "Dukemon", "Lunamon", "Gargomon", "Culumon", "Yukidarumon"];
+
+    const fetchDigimonData = async (digimon) => {
+        try {
+            const url = `https://digi-api.com/api/v1/digimon/${digimon}`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch data for ${digimon}: ${response.status} - ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    };
+
+    try {
+        const digimonData = await Promise.all(
+            myFavouriteDigimon.map(fetchDigimonData)
+        );
+
+        const cardData = digimonData.map((data) => {
+            if (!data) return null;
+            const imageUrl = data.images[0]?.href || "";
+            return {
+                id: data.id,
+                title: data.name,
+                subtitle: `${data.types.map((type) => type.type).join(", ")}`,
+                image: imageUrl,
+                attribute: data.attributes[0]?.name || "Unknown Attribute",
+                field: data.fields[0]?.name || "Unknown Field"
+            };
+        });
+
+        let cardsHtml = '';
+        for (const digimon of cardData) {
+            if (digimon) {
+                const card = await createCardElement(digimon);
+                cardsHtml += card;
+            }
+        }
+
+        document.getElementById("digimon-results").innerHTML = cardsHtml;
+    } catch (error) {
+        console.error("Error digimon cards:", error);
+    }
+}
+
+renderOption2(); 
+
