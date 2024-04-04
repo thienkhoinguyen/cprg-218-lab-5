@@ -6,7 +6,7 @@
 
 async function createCardElement(item) {
     return `
-    <li class="card">
+    <div class="card">
         <img src="${item.image}" alt="">
         <div class="card-content">
             <p class="subheader">${item.subtitle}</p>
@@ -15,7 +15,7 @@ async function createCardElement(item) {
             <p class="field">Field: ${item.field}</p>
             <p class="digimon-id">Digimon ID: ${item.id}</p>
          </div>
-    </li>`;
+    </div>`;
 }
 
 async function fetchDigimonDetails(url) {
