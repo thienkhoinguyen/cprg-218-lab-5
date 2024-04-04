@@ -136,11 +136,8 @@ option1SubmitButton.addEventListener("click", option1DropdownClickHandler);
 
 /**digimon list Option 2 */
 
-/**digimon list Option 2 */
-
-
 async function renderOption2() {
-    const myFavouriteDigimon = ["Garummon", "Dukemon", "Lunamon", "Gargomon", "Culumon", "Yukidarumon"];
+    const myFavouriteDigimon = ["Beelzebumon", "Dukemon", "war greymon", "dianamon", "angemon", "leomon"];
 
     const fetchDigimonData = async (digimon) => {
         try {
